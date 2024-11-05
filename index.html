@@ -7,13 +7,16 @@
     <style>
         body { margin: 0; overflow: hidden; }
         #mensaje { position: absolute; top: 10px; left: 10px; color: white; font-size: 20px; }
+        #contenedor3D { width: 100vw; height: 100vh; }
     </style>
 </head>
 <body>
     <div id="mensaje">¡Mírame girar! Soy invencible ante la radiación 🛡️</div>
     <div id="contenedor3D"></div>
 
+    <!-- Incluye Three.js y el script -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
