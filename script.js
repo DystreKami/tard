@@ -12,7 +12,7 @@ escena.add(luz);
 
 // Cargar el modelo GLTF
 const cargador = new THREE.GLTFLoader();
-cargador.load('nombre-del-modelo.glb', (gltf) => {
+cargador.load('water_bear.glb', (gltf) => {
     const modelo = gltf.scene;
     escena.add(modelo);
     modelo.position.set(0, -0.5, 0);
