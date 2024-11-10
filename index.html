@@ -54,6 +54,8 @@
 
     <h2>Resultado:</h2>
     <pre id="output"></pre>
+
+    <button id="downloadBtn" style="display:none;">Descargar archivo .fasta</button>
   </div>
 
   <script>
@@ -85,8 +87,23 @@
 
           // Mostrar el resultado
           document.getElementById('output').textContent = secuencia_final;
+
+          // Hacer disponible el botón para descargar
+          const downloadBtn = document.getElementById('downloadBtn');
+          downloadBtn.style.display = 'block';
+
+          // Función para descargar el archivo .fasta
+          downloadBtn.onclick = function() {
+            const fastaContent = `>SEQ_MOD\n${secuencia_final}`;
+            const blob = new Blob([fastaContent], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'secuencia_modificada.fasta';
+            link.click();
+          };
         } else {
           document.getElementById('output').textContent = 'La secuencia es demasiado corta para el procesamiento solicitado.';
+          document.getElementById('downloadBtn').style.display = 'none'; // Ocultar el botón si no es válido
         }
       };
 
