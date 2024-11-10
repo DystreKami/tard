@@ -1,22 +1,115 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tardígrado en 3D</title>
-    <style>
-        body { margin: 0; overflow: hidden; }
-        #mensaje { position: absolute; top: 10px; left: 10px; color: white; font-size: 20px; }
-        #contenedor3D { width: 100vw; height: 100vh; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procesar Secuencia de ADN</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    input[type="number"], input[type="file"], button {
+      width: 100%;
+      padding: 8px;
+      margin: 10px 0;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    pre {
+      background-color: #f4f4f4;
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
-    <div id="mensaje">¡Mírame girar! Soy invencible ante la radiación 🛡️</div>
-    <div id="contenedor3D"></div>
 
-    <!-- Incluye Three.js y el script -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="script.js"></script>
+  <div class="container">
+    <h1>Procesar Secuencia de ADN</h1>
+    <form id="form">
+      <label for="inicio">Posición de inicio:</label>
+      <input type="number" id="inicio" name="inicio" value="20000" required>
+
+      <label for="final">Posición final:</label>
+      <input type="number" id="final" name="final" value="20000" required>
+
+      <label for="file">Sube tu archivo de secuencia (formato .fa):</label>
+      <input type="file" id="file" name="file" required>
+
+      <button type="submit">Procesar Secuencia</button>
+    </form>
+
+    <h2>Resultado:</h2>
+    <pre id="output"></pre>
+  </div>
+
+  <script>
+    // Función para procesar el archivo y las posiciones
+    function processFile(file, inicio, final) {
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        // Obtener el contenido del archivo
+        const content = e.target.result;
+
+        // Separar el archivo por líneas
+        const lines = content.split('\n');
+        
+        // Eliminar la primera línea (header) y juntar el resto
+        const secuencia = lines.slice(1).join('');
+
+        // Calcular la longitud total de la secuencia
+        const numero_caracteres = secuencia.length;
+
+        // Comprobar si las posiciones son válidas
+        if (numero_caracteres >= (inicio + final)) {
+          // Extraer las subcadenas
+          const seq_inicio = secuencia.slice(0, inicio);
+          const seq_ultima_parte = secuencia.slice(numero_caracteres - final);
+
+          // Concatenar las secuencias
+          const secuencia_final = seq_inicio + seq_ultima_parte;
+
+          // Mostrar el resultado
+          document.getElementById('output').textContent = secuencia_final;
+        } else {
+          document.getElementById('output').textContent = 'La secuencia es demasiado corta para el procesamiento solicitado.';
+        }
+      };
+
+      reader.readAsText(file);  // Leer el archivo como texto
+    }
+
+    // Capturar el envío del formulario
+    document.getElementById('form').addEventListener('submit', function(e) {
+      e.preventDefault();  // Evitar el comportamiento por defecto del formulario
+
+      // Obtener los valores del formulario
+      const inicio = parseInt(document.getElementById('inicio').value);
+      const final = parseInt(document.getElementById('final').value);
+      const file = document.getElementById('file').files[0];
+
+      // Verificar que se haya cargado un archivo
+      if (file) {
+        processFile(file, inicio, final);
+      } else {
+        alert("Por favor, carga un archivo de secuencia.");
+      }
+    });
+  </script>
+
 </body>
 </html>
